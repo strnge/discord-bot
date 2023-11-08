@@ -36,51 +36,57 @@ module.exports = {
 		const collectorFilter = i => i.user.id === interaction.user.id;
 
 		try {
+			await interaction.editReply({
+				content: 'Choose what to play!',
+				components: [row].setDisabled(true),
+			});
 			const confirmation = await response.awaitMessageComponent({ filter : collectorFilter, time: 60_000 });
+
 			switch (confirmation.customId) {
 			case 'rock':
 				switch (botRPSChoice) {
 				case 0:
-					confirmation.update({ content: 'You tied!' });
+					confirmation.reply({ content: 'You tied!' });
 					break;
 				case 1:
-					confirmation.update({ content: `You lost! You chose ${confirmation.customId} and the bot chose paper!` });
+					confirmation.reply({ content: `You lost! You chose ${confirmation.customId} and the bot chose paper!` });
 					break;
 				case 2:
-					confirmation.update({ content: `You win! You chose ${confirmation.customId} and the bot chose scissors!` });
+					confirmation.reply({ content: `You win! You chose ${confirmation.customId} and the bot chose scissors!` });
 					break;
 				}
 				break;
 			case 'paper':
 				switch (botRPSChoice) {
 				case 0:
-					confirmation.update({ content: `You win! You chose ${confirmation.customId} and the bot chose rock!` });
+					confirmation.reply({ content: `You win! You chose ${confirmation.customId} and the bot chose rock!` });
 					break;
 				case 1:
-					confirmation.update({ content: 'You tied!' });
+					confirmation.reply({ content: 'You tied!' });
 					break;
 				case 2:
-					confirmation.update({ content: `You lost! You chose ${confirmation.customId} and the bot chose scissors!` });
+					confirmation.reply({ content: `You lost! You chose ${confirmation.customId} and the bot chose scissors!` });
 					break;
 				}
 				break;
 			case 'scissors':
 				switch (botRPSChoice) {
 				case 0:
-					confirmation.update({ content: `You lost! You chose ${confirmation.customId} and the bot chose rock!` });
+					confirmation.reply({ content: `You lost! You chose ${confirmation.customId} and the bot chose rock!` });
 					break;
 				case 1:
-					confirmation.update({ content: `You win! You chose ${confirmation.customId} and the bot chose paper!` });
+					confirmation.reply({ content: `You win! You chose ${confirmation.customId} and the bot chose paper!` });
 					break;
 				case 2:
-					confirmation.update({ content: 'You tied!' });
+					confirmation.reply({ content: 'You tied!' });
 					break;
 				}
 				break;
 			}
+			row.components.setDisabled(true);
 		}
 		catch (e) {
-			await interaction.editReply({ content: 'Please choose more quickly! (less than 1 minute)' });
+			await interaction.reply({ content: 'Please choose more quickly! (less than 1 minute)' });
 		}
 
 		// TODO: add the game finishing calculations and output
