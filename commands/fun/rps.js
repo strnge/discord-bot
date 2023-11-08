@@ -32,24 +32,55 @@ module.exports = {
 			components: [row],
 		});
 
-		const botRPSChoice = Math.floor(Math.random() * 11);
-		const collectorFilter = i => i.user.id ===interaction.user.id;
+		const botRPSChoice = Math.floor(Math.random() * 3);
+		const collectorFilter = i => i.user.id === interaction.user.id;
 
 		try {
-			switch(){
-				case '🪨':
-					//blah
+			const confirmation = await response.awaitMessageComponent({ filter : collectorFilter, time: 60_000 });
+			switch (confirmation.customId) {
+			case 'rock':
+				switch (botRPSChoice) {
+				case 0:
+					confirmation.update({ content: 'You tied!' });
 					break;
-				case '📝':
-					//blah
+				case 1:
+					confirmation.update({ content: `You lost! You chose ${confirmation.customId} and the bot chose paper!` });
 					break;
-				case '✂️':
-					//blah
+				case 2:
+					confirmation.update({ content: `You win! You chose ${confirmation.customId} and the bot chose scissors!` });
 					break;
+				}
+				break;
+			case 'paper':
+				switch (botRPSChoice) {
+				case 0:
+					confirmation.update({ content: `You win! You chose ${confirmation.customId} and the bot chose rock!` });
+					break;
+				case 1:
+					confirmation.update({ content: 'You tied!' });
+					break;
+				case 2:
+					confirmation.update({ content: `You lost! You chose ${confirmation.customId} and the bot chose scissors!` });
+					break;
+				}
+				break;
+			case 'scissors':
+				switch (botRPSChoice) {
+				case 0:
+					confirmation.update({ content: `You lost! You chose ${confirmation.customId} and the bot chose rock!` });
+					break;
+				case 1:
+					confirmation.update({ content: `You win! You chose ${confirmation.customId} and the bot chose paper!` });
+					break;
+				case 2:
+					confirmation.update({ content: 'You tied!' });
+					break;
+				}
+				break;
 			}
 		}
-		catch(e){
-			
+		catch (e) {
+			await interaction.editReply({ content: 'Please choose more quickly! (less than 1 minute)' });
 		}
 
 		// TODO: add the game finishing calculations and output
