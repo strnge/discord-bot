@@ -1,14 +1,25 @@
 const { SlashCommandBuilder } = require('discord.js');
-const fs = require('fs');
+const { readFileSync } = require('fs');
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('quote')
 		.setDescription('Outputs a random quote from the list of all time greats'),
+
 	async execute(interaction) {
-		const quoteConverter = fs.readFile('./quotes.txt', 'utf-8');
-		const quoteArray = quoteConverter.split('\n');
-		const outputQuote = quoteArray[Math.random() * quoteArray.length];
-		await interaction.reply(outputQuote);
+		const quoteArray = syncReadFile('./commands/fun/quotes.txt');
+		const quoteIndex = Math.floor(Math.random() * quoteArray.length);
+		const outputQuote = quoteArray[quoteIndex];
+		await interaction.reply({ content: outputQuote });
 	},
 };
+
+
+function syncReadFile(filename) {
+	const contents = readFileSync(filename, 'utf-8');
+
+	const arr = contents.split(/\r?\n/);
+
+	return arr;
+}
+
